@@ -156,6 +156,10 @@
 				RelativePath=".\EngineSrc\QuartzDB.c"
 				>
 			</File>
+			<File
+				RelativePath=".\EngineSrc\String.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="헤더 파일"
@@ -172,6 +176,10 @@
 			</File>
 			<File
 				RelativePath=".\EngineSrc\QuartzDB.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EngineSrc\String.h"
 				>
 			</File>
 			<File

@@ -1,6 +1,7 @@
 #include "TypeDef.h"
 #include "TypeExt.h"
 #include "QuartzDB.h"
+#include "String.h"
 
 /******************************************************/
 static void _RunMsg(QUARTZ_REQ* pReq);
@@ -9,7 +10,25 @@ static void _RunMsg(QUARTZ_REQ* pReq);
 
 DB_HANDLE QDB_Open(char* path)
 {
-	return (DB_HANDLE)0;
+    QUARTZ_CTX *pCtx = Q_NULL;
+
+    pCtx = (QUARTZ_CTX*)PD_Malloc(sizeof(QUARTZ_CTX));
+    QDB_ASSERT(pCtx);
+
+    INIT_QUARTZ_CTX(*pCtx);
+    strcpyA(pCtx->FilePath, path);
+
+    return (DB_HANDLE)pCtx;
+}
+
+void QDB_Close(DB_HANDLE handle)
+{
+    QUARTZ_CTX *pCtx = handle;
+
+	QDB_ASSERT(pCtx->Magic == QUARTZ_CTX_MAGIC);
+	pCtx->Magic = 0;
+
+    PD_Free(pCtx);
 }
 
 int QDB_InsertRequest(DB_HANDLE handle, QUARTZ_REQ* pReq)
@@ -17,14 +36,16 @@ int QDB_InsertRequest(DB_HANDLE handle, QUARTZ_REQ* pReq)
     QUARTZ_CTX *pCtx = (QUARTZ_CTX*)handle;
     QUARTZ_MSG *pMsg = Q_NULL;
 
+	QDB_ASSERT(pCtx->Magic == QUARTZ_CTX_MAGIC);
+
     if (!pReq)
         goto OUT_RETURN;
 
     pMsg = (QUARTZ_MSG*)PD_Malloc(sizeof(QUARTZ_MSG));
+    QDB_ASSERT(pMsg);
 
+    INIT_QUARTZ_MSG(*pMsg);
     pMsg->req = *pReq;
-
-    INIT_LIST_NODE(pMsg->link);
 
     while(PD_ObtainSemapore(SEMA_QUEUE) != SEMA_SUCCESS)
         PD_Sleep(100);
@@ -44,6 +65,8 @@ void QDB_Run(DB_HANDLE handle)
     QUARTZ_CTX *pCtx  = (QUARTZ_CTX*)handle;
     LIST_NODE  *pLink = Q_NULL;
     QUARTZ_MSG *pMsg  = Q_NULL;
+
+	QDB_ASSERT(pCtx->Magic == QUARTZ_CTX_MAGIC);
 
     while(PD_ObtainSemapore(SEMA_QUEUE) != SEMA_SUCCESS)
         PD_Sleep(100);

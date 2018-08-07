@@ -29,6 +29,17 @@ void PD_Free(void* ptr)
 	free(ptr);
 }
 
+void PD_Memset(void* p, int size)
+{
+    memset(p, 0, size);
+}
+
+void PD_Memcpy(void* dst, void* src, int size)
+{
+    memcpy(dst,src,size);
+}
+
+
 void PD_Sleep(int ms)
 {
 	Sleep(ms);
