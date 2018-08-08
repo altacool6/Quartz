@@ -2,6 +2,7 @@
 #include "TypeExt.h"
 #include "QuartzDB.h"
 #include "String.h"
+#include "stdarg.h"
 
 /******************************************************/
 static void _RunMsg(QUARTZ_REQ* pReq);
@@ -19,6 +20,27 @@ DB_HANDLE QDB_Open(char* path)
     strcpyA(pCtx->FilePath, path);
 
     return (DB_HANDLE)pCtx;
+}
+
+int _QDB_CreateTable (DB_HANDLE handle, char* t_name, ...)
+{
+    int         status = 0;
+    va_list     args;
+    COLUME_INFO cInfo;
+
+    va_start(args, t_name);
+
+    do{
+        cInfo = va_arg(args, COLUME_INFO);
+        if (cInfo.c_name == Q_NULL)
+            break;
+
+        PD_Printf("[%s][%s]\n", t_name, cInfo.c_name);
+    } while(1);
+
+    va_end(args);
+
+    return status;
 }
 
 void QDB_Close(DB_HANDLE handle)

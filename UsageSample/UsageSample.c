@@ -15,7 +15,11 @@ void DB_Thread(DB_HANDLE hQDB)
 
 static void _CreateDBScheme(DB_HANDLE hQDB)
 {
-
+     QDB_CreateTable(hQDB, "T_Table", 
+                     GET_COLUME_INFO("C_COL0", 0, 4),
+                     GET_COLUME_INFO("C_COL1", 1, 5),
+                     GET_COLUME_INFO("C_COL2", 2, 6),
+                     GET_COLUME_INFO("C_COL3", 3, 7));
 }
 
 static void _BulkInsert(DB_HANDLE hQDB)
@@ -39,9 +43,9 @@ int main(void)
 
     hQDB = QDB_Open("test.bin");
 
-    _beginthread( DB_Thread, 0, hQDB); //start DB Thread
-
     _CreateDBScheme(hQDB);
+
+    _beginthread( DB_Thread, 0, hQDB); //start DB Thread
 
     _BulkInsert(hQDB);
 

@@ -1,7 +1,7 @@
 #ifndef __TYPE_DEF_H__
 #define __TYPE_DEF_H__
 
-typedef int Q_BOOL;
+typedef char Q_BOOL;
 enum{
     Q_FALSE,
     Q_TRUE
@@ -9,12 +9,53 @@ enum{
 
 #define Q_NULL	(0)
 
-typedef struct QuartzReq{
-    int a;
+typedef int SEARCH_COND;
+
+enum{
+    IS_NULL,
+    IS_NOT_NULL,
+    EQUAL,
+    NOT_EQUAL,
+    LIKE,        // this condition can only use in case of String Field
+    DISTINCT,
+};/* Q_BOOL Range*/
+
+typedef void (*CBFuncDistinct)(int reqID, int tag, int columeType, void* value);
+typedef void (*CBFuncNormal)  (int reqID, int tag, int recordID,   int  param);
+
+typedef struct QuartzReq {
+    char        t_name[256];
+/*
+    struct _searchInfo {
+        char        c_name[256];
+
+        SEARCH_COND condition;
+
+        union {
+            char    val8;
+            short   val16;
+            int     val32;
+            char    valStr[256];
+        } value;
+
+        union {
+            struct _normal{
+                int             reqID;
+                int             tag;
+                CBFuncNormal    pfCBNormal;
+            } normal;
+            struct _distinct{
+                int             reqID;
+                int             tag;
+                CBFuncDistinct  pfCBDistinct;
+            } distinct;
+
+        } CBInfo;
+    } SearchInfo;*/
 } QUARTZ_REQ;
 
-#define INIT_QUARTZ_REQ(a)    do{                               \
-                                PD_Memset(&(a), sizeof((a)));   \
+#define INIT_QUARTZ_REQ(a)  do{                               \
+                                PD_Memset(&(a), sizeof((a))); \
                             }while(0)
 
 typedef void* DB_HANDLE;
