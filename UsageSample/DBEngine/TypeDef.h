@@ -7,6 +7,12 @@ enum{
     Q_TRUE
 };/* Q_BOOL Range*/
 
+typedef int Q_RET_CODE;
+enum{
+    Q_RET_SUCCESS = 0,
+    Q_RET_FAILURE = -1
+};/* Q_RET_CODE */
+
 #define Q_NULL	(0)
 
 typedef int SEARCH_COND;

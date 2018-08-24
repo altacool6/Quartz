@@ -2,6 +2,7 @@
 #define __TYPE_EXT_H__
 
 #include "List.h"
+#include "_QuartzPage.h"
 #include "QuartzDB.h"
 
 typedef struct QuartzMsg{
@@ -15,7 +16,7 @@ typedef struct QuartzMsg{
                             }while(0)
 
 typedef struct QuartzQ{
-    unsigned  long Magic;
+    unsigned  long magic;
     LIST_NODE      head;
     int            count;
 } QUARTZ_Q;
@@ -23,23 +24,45 @@ typedef struct QuartzQ{
 #define QUARTZ_QUEUE_MAGIC (0xCCCCAAAA)
 
 #define INIT_QUARTZ_Q(a)    do{                                 \
-                                (a).Magic = QUARTZ_QUEUE_MAGIC; \
+                                (a).magic = QUARTZ_QUEUE_MAGIC; \
                                 INIT_LIST_NODE((a).head);       \
                                 (a).count = 0;                  \
                             }while(0)
 
 typedef struct QuartzCtx{
-    unsigned  long Magic;
-    char	  FilePath[256];
-    QUARTZ_Q  ReqQueue;
+    unsigned  long magic;
+
+    char           filePath[256];
+    signed int     pageCnt;
+
+    struct Mmu { /* virtual memory management unit */
+        QUARTZ_PAGE_OBJ  pool[QUARTZ_MAX_LOAD_PAGE_COUNT];
+        char             page[QUARTZ_MAX_LOAD_PAGE_COUNT][QUARTZ_PAGE_SIZE];
+        LIST_NODE        stLRU;    //LRU List
+        QUARTZ_PAGE_OBJ* pRoot;
+    } mmu;
+
+    QUARTZ_Q  reqQueue;
 } QUARTZ_CTX;
+
+#define INIT_MMU(a) do{                                                     \
+                        int i;                                              \
+                        (a).pRoot = Q_NULL;                                 \
+                        INIT_LIST_NODE((a).stLRU);                          \
+                        for (i = 0 ; i < QUARTZ_MAX_LOAD_PAGE_COUNT ; i++){ \
+                            INIT_QUARTZ_PAGE_OBJ((a).pool[i], (a).page[i]); \
+                            LIST_AddLast(&(a).stLRU, &(a).pool[i].stLink);  \
+                        }                                                   \
+                    } while(0)
 
 #define QUARTZ_CTX_MAGIC (0xCAFACFBC)
 
-#define INIT_QUARTZ_CTX(a) do{                                  \
-                                PD_Memset(&a, sizeof((a)));     \
-                                (a).Magic = QUARTZ_CTX_MAGIC;   \
-                                INIT_QUARTZ_Q((a).ReqQueue);    \
+#define INIT_QUARTZ_CTX(a)  do{                                     \
+                                PD_Memset(&a, sizeof((a)));         \
+                                (a).magic   = QUARTZ_CTX_MAGIC;     \
+                                (a).pageCnt = 0;                    \
+                                INIT_MMU((a).mmu);                  \
+                                INIT_QUARTZ_Q((a).reqQueue);        \
                             }while(0)
 
 #endif  //#ifndef __TYPE_EXT_H__

@@ -149,6 +149,22 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\EngineSrc\_QuartzData.c"
+				>
+			</File>
+			<File
+				RelativePath=".\EngineSrc\_QuartzDictionary.c"
+				>
+			</File>
+			<File
+				RelativePath=".\EngineSrc\_QuartzIndex.c"
+				>
+			</File>
+			<File
+				RelativePath=".\EngineSrc\_QuartzPage.c"
+				>
+			</File>
+			<File
 				RelativePath=".\EngineSrc\List.c"
 				>
 			</File>
@@ -167,11 +183,31 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\EngineSrc\_QuartzData.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EngineSrc\_QuartzDictionary.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EngineSrc\_QuartzIndex.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EngineSrc\_QuartzPage.h"
+				>
+			</File>
+			<File
 				RelativePath=".\EngineSrc\Custom.h"
 				>
 			</File>
 			<File
 				RelativePath=".\EngineSrc\List.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EngineSrc\QuartzCfg.h"
 				>
 			</File>
 			<File
